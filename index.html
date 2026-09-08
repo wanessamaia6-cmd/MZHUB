@@ -80,6 +80,11 @@ tbody tr.sub:hover td{background:#fffcf5;} tbody tr.sub:hover td:first-child{bac
 .sbar input:focus{border-color:#f5a623;}
 .sbar span{font-size:11px;color:#aaa;white-space:nowrap;}
 .chart-wrap{position:relative;padding:12px;flex:1;min-height:0;}
+/* pagina de competencia: esconde tudo que e regime de caixa */
+body.compet .krow{display:none!important;}
+body.compet .top .flt{display:none!important;}
+body.compet .top .tbtn{display:none!important;}
+body.compet .top .sep{display:none!important;}
 </style>
 </head>
 <body>
@@ -109,6 +114,7 @@ tbody tr.sub:hover td{background:#fffcf5;} tbody tr.sub:hover td:first-child{bac
   <div class="nav" onclick="goPage('caixa',this)"><div class="nav-i">&#127981;</div><div class="nav-t">Caixa</div></div>
   <div class="nav" onclick="goPage('analises',this)"><div class="nav-i">&#128269;</div><div class="nav-t">An&aacute;lises</div></div>
   <div class="nav" onclick="goPage('kpis',this)"><div class="nav-i">&#128202;</div><div class="nav-t">KPI&#39;s</div></div>
+  <div class="nav" onclick="goPage('hotmart',this)"><div class="nav-i">&#128100;</div><div class="nav-t">Faturam.<br>x Clientes</div></div>
 </aside>
 
 <div class="main">
@@ -131,6 +137,7 @@ tbody tr.sub:hover td{background:#fffcf5;} tbody tr.sub:hover td:first-child{bac
       </select></div>
   </div>
 
+  <div style="background:#fff;padding:3px 16px;border-bottom:1px solid #f2f2f2;text-align:right;flex-shrink:0;"><span style="font-size:9.5px;color:#bbb;">vers&atilde;o de <strong style="color:#999">08/09/2026 20:30</strong> &nbsp;&middot;&nbsp; se estiver vendo algo desatualizado, pressione Ctrl+F5</span></div>
   <div class="krow" id="krow"></div>
 
   <div class="cnt">
@@ -218,6 +225,65 @@ tbody tr.sub:hover td{background:#fffcf5;} tbody tr.sub:hover td:first-child{bac
       <div class="card" style="flex-shrink:0;">
         <div class="card-h"><h3>Top 10 Maiores Despesas por Fornecedor</h3></div>
         <div class="tscroll" style="max-height:140px;"><table id="tbl-top10"></table></div>
+      </div>
+    </div>
+    <!-- FATURAMENTO x CLIENTES -->
+    <div class="page" id="page-hotmart" style="overflow-y:auto;">
+      <div class="card" style="flex-shrink:0;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#555;">Faturamento &times; Clientes &mdash; Hotmart</h3>
+        <span style="font-size:10px;color:#aaa;">Compet&ecirc;ncia 01/08 a 31/08/2026 &middot; independe do filtro de m&ecirc;s</span>
+      </div>
+      <div class="grid4" style="flex-shrink:0;" id="hot-kpis"></div>
+      <div id="hot-gratis" style="flex-shrink:0;"></div>
+      <div class="grid2" style="flex-shrink:0;">
+        <div class="card" style="overflow:hidden;">
+          <div class="card-h"><h3>Taxas da Hotmart por produto</h3><span style="font-size:10px;color:#aaa">quanto fica pelo caminho</span></div>
+          <div class="tscroll" style="max-height:250px;"><table id="tbl-hot-taxa"></table></div>
+        </div>
+        <div class="card" style="overflow:hidden;">
+          <div class="card-h"><h3>Taxa por meio de pagamento</h3></div>
+          <div id="hot-taxa-pag" style="padding:12px 14px;"></div>
+        </div>
+      </div>
+      <div class="grid2" style="flex-shrink:0;">
+        <div class="card" style="overflow:hidden;">
+          <div class="card-h"><h3>Faturamento por origem do cliente</h3></div>
+          <div class="tscroll"><table id="tbl-hot-grupos"></table></div>
+        </div>
+        <div class="card" style="overflow:hidden;">
+          <div class="card-h"><h3>Ponte com o caixa</h3><span style="font-size:10px;color:#aaa">vendido &times; sacado</span></div>
+          <div class="tscroll" id="hot-ponte"></div>
+        </div>
+      </div>
+      <div class="grid2" style="flex-shrink:0;">
+        <div class="card" style="overflow:hidden;">
+          <div class="card-h"><h3>Assinaturas iniciadas em agosto</h3><span style="font-size:10px;color:#aaa">situa&ccedil;&atilde;o em 08/09/2026</span></div>
+          <div class="tscroll" style="max-height:240px;"><table id="tbl-hot-assin"></table></div>
+        </div>
+        <div class="card" style="overflow:hidden;display:flex;flex-direction:column;">
+          <div class="card-h"><h3>Reten&ccedil;&atilde;o no primeiro m&ecirc;s</h3></div>
+          <div id="hot-churn" style="padding:12px 14px;"></div>
+        </div>
+      </div>
+      <div class="grid2" style="flex-shrink:0;height:300px;">
+        <div class="card" style="display:flex;flex-direction:column;overflow:hidden;">
+          <div class="card-h"><h3>Faturamento &times; clientes por produto</h3></div>
+          <div class="chart-wrap"><canvas id="chart-hot-prod"></canvas></div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;overflow:hidden;">
+          <div class="card-h"><h3>Base de clientes por tempo de assinatura</h3></div>
+          <div class="chart-wrap"><canvas id="chart-hot-ret"></canvas></div>
+        </div>
+      </div>
+      <div class="grid2" style="flex-shrink:0;">
+        <div class="card" style="overflow:hidden;">
+          <div class="card-h"><h3>Detalhe por produto</h3></div>
+          <div class="tscroll" style="max-height:180px;"><table id="tbl-hot-prod"></table></div>
+        </div>
+        <div class="card" style="overflow:hidden;">
+          <div class="card-h"><h3>Meio de pagamento</h3></div>
+          <div class="tscroll" style="max-height:180px;"><table id="tbl-hot-pag"></table></div>
+        </div>
       </div>
     </div>
 
@@ -645,6 +711,215 @@ function renderKPIsPage(){
   document.getElementById('tbl-top10').innerHTML=h+'</tbody>';
 }
 
+// ── FATURAMENTO x CLIENTES (Hotmart, competência) ──────
+const HOT={
+  periodo:'01/08/2026 a 31/08/2026',
+  transacoes:263, bruto:40680.96, taxas:7457.80, liquido:33223.16,
+  assinantes:255, compradores:250,
+  sacado:36480.15, pendente:16376.66, taxaSaque:7.96,
+  grupos:[
+    {n:'Clientes novos', d:'1ª cobrança da assinatura', q:65,  v:15062.15},
+    {n:'Clientes recorrentes', d:'2ª cobrança em diante', q:193, v:17292.66},
+    {n:'Avulsos e parcelados', d:'produto sem recorrência', q:5, v:868.35}
+  ],
+  gratis:{total:23, trial:17, cupom:6, cerebro:22},
+  produtos:[
+    {n:'CEREBRO MZHUB', q:47, v:18976.35, novos:31, rec:16},
+    {n:'MZFy', q:188, v:11609.40, novos:33, rec:155},
+    {n:'Comunidade Vendedores do Futuro', q:22, v:1417.81, novos:0, rec:22},
+    {n:'Crie Sua Marca e Domine a Amazon', q:2, v:549.00, novos:0, rec:0},
+    {n:'MZScan + MZBrands', q:1, v:351.25, novos:1, rec:0},
+    {n:'Intensivão de Mineração de Produtos', q:1, v:277.31, novos:0, rec:0},
+    {n:'Desafio do Produto Milionário', q:2, v:42.04, novos:0, rec:0}
+  ],
+  pagamento:[
+    {n:'Cartão de Crédito', q:244, v:31422.01},
+    {n:'PIX Automático', q:14, v:1492.37},
+    {n:'Pix', q:5, v:308.78}
+  ],
+  // assinaturas iniciadas em agosto que seguem ativas (export Hotmart de 08/09 22:42)
+  // "mensal" = valor normalizado por mês: anual ÷ 12, plano de 2 anos ÷ 24
+  assin:{
+    novasNoMes:65, ativas:52, contratado:16617.94, mensal:4555.43,
+    planos:[
+      {n:'CEREBRO MZHUB Anual',            q:7,  v:7955.04, m:662.92},
+      {n:'CEREBRO BLACK 2 anos por 1',     q:2,  v:4977.80, m:207.41},
+      {n:'MZFy Mensal',                    q:29, v:2027.10, m:2027.10},
+      {n:'CEREBRO MZHUB Mensal',           q:6,  v:960.00,  m:960.00},
+      {n:'MZScan + MZBrands Mensal',       q:1,  v:379.00,  m:379.00},
+      {n:'Experimente Cerebro 1 Mês',      q:1,  v:319.00,  m:319.00},
+      {n:'30 dias grátis CEREBRO ANUAL',   q:5,  v:0,       m:0},
+      {n:'MZFy 30 dias grátis',            q:1,  v:0,       m:0}
+    ]
+  },
+  // taxa = Preço Total (o que o cliente pagou) − Faturamento líquido (o que a MZHUB recebe)
+  taxaProd:[
+    {n:'CEREBRO MZHUB',                    q:47,  b:24538.66, l:18976.35},
+    {n:'MZFy',                             q:188, b:13071.30, l:11609.40},
+    {n:'Comunidade Vendedores do Futuro',  q:22,  b:1580.40,  l:1417.81},
+    {n:'Crie Sua Marca e Domine a Amazon', q:2,   b:696.16,   l:549.00},
+    {n:'Intensivão de Mineração de Produtos', q:1, b:361.44,  l:277.31},
+    {n:'MZScan + MZBrands',                q:1,   b:379.00,   l:351.25},
+    {n:'Desafio do Produto Milionário',    q:2,   b:54.00,    l:42.04}
+  ],
+  taxaPag:[
+    {n:'Cartão de Crédito', q:244, b:38711.86, l:31422.01},
+    {n:'PIX Automático',    q:14,  b:1619.60,  l:1492.37},
+    {n:'Pix',               q:5,   b:349.50,   l:308.78}
+  ],
+  cobrancas:[65,35,23,13,14,17,16,12,13,15,15,17,3],
+  saques2026:[67819.58,19155.16,48177.26,41314.63,53984.88,45206.40,27294.60,36480.15]
+};
+
+function renderHotmart(){
+  const pct=v=>(v/HOT.liquido*100).toFixed(1)+'%';
+  const novosPag=HOT.grupos[0].q-HOT.gratis.total;
+  const arpu=HOT.liquido/HOT.compradores;
+
+  // ── Indicadores de Faturamento x Clientes ──
+  document.getElementById('hot-kpis').innerHTML=[
+    {n:'Clientes que faturaram', v:HOT.compradores, s:HOT.transacoes+' transações no mês', c:'', raw:true},
+    {n:'Faturamento líquido', v:HOT.liquido, s:'bruto '+fmtBig(HOT.bruto)+' − taxas '+fmtBig(HOT.taxas), c:'pos'},
+    {n:'Receita por cliente', v:arpu, s:'líquido ÷ clientes do mês', c:''},
+    {n:'Clientes novos pagantes', v:novosPag, s:'de '+HOT.grupos[0].q+' assinaturas novas', c:'', raw:true}
+  ].map(k=>'<div class="card"><div class="kpi-big"><div class="kn">'+k.n+'</div><div class="kv '+k.c+'">'
+    +(k.raw?k.v:fmtBig(k.v))+'</div><div class="sub">'+k.s+'</div></div></div>').join('');
+
+  // ── Faturamento x clientes por origem ──
+  let h='<thead><tr><th>Origem</th><th>Clientes</th><th>% clientes</th><th class="ct">Faturamento líquido</th><th>% receita</th><th>Receita/cliente</th></tr></thead><tbody>';
+  HOT.grupos.forEach(g=>{
+    h+='<tr><td>'+g.n+'<div style="font-size:10px;color:#aaa">'+g.d+'</div></td>'
+      +'<td>'+g.q+'</td><td>'+(g.q/HOT.transacoes*100).toFixed(1)+'%</td>'
+      +'<td class="ct pos">'+fmtBR(g.v)+'</td><td>'+pct(g.v)+'</td><td>'+fmtBR(g.v/g.q)+'</td></tr>';
+  });
+  h+='<tr class="ttl"><td>Total</td><td>'+HOT.transacoes+'</td><td>100,0%</td><td class="ct">'+fmtBR(HOT.liquido)+'</td><td>100,0%</td><td>'+fmtBR(HOT.liquido/HOT.transacoes)+'</td></tr></tbody>';
+  document.getElementById('tbl-hot-grupos').innerHTML=h;
+
+  document.getElementById('hot-gratis').innerHTML=
+    '<div style="padding:11px 14px;background:#fff8e6;border-left:3px solid #f5a623;font-size:11.5px;line-height:1.6;color:#5a4a20;">'
+    +'<strong>'+HOT.gratis.total+' das '+HOT.grupos[0].q+' assinaturas novas faturaram R$ 0,00</strong> — '
+    +HOT.gratis.trial+' em período grátis e '+HOT.gratis.cupom+' com cupom SCALE3 a R$ 1,00, '
+    +HOT.gratis.cerebro+' delas no CEREBRO MZHUB. Ou seja: apenas <strong>'+novosPag+' clientes novos geraram receita</strong>, '
+    +'com ticket real de <strong>'+fmtBR(HOT.grupos[0].v/novosPag)+'</strong>. Essas entradas gratuitas só viram receita na cobrança seguinte.'
+    +'</div>';
+
+  // ── Produtos ──
+  h='<thead><tr><th>Produto</th><th>Clientes</th><th>Novos</th><th>Recorr.</th><th class="ct">Líquido</th><th>% receita</th><th>Ticket</th></tr></thead><tbody>';
+  HOT.produtos.forEach(p=>{
+    h+='<tr><td>'+p.n+'</td><td>'+p.q+'</td><td>'+(p.novos||'')+'</td><td>'+(p.rec||'')+'</td>'
+      +'<td class="ct pos">'+fmtBR(p.v)+'</td><td>'+pct(p.v)+'</td><td>'+fmtBR(p.v/p.q)+'</td></tr>';
+  });
+  document.getElementById('tbl-hot-prod').innerHTML=h+'</tbody>';
+
+  // ── Ponte com o caixa ──
+  const dif=HOT.sacado-HOT.liquido;
+  document.getElementById('hot-ponte').innerHTML='<table><tbody>'
+    +'<tr><td>Faturamento líquido vendido em agosto</td><td class="ct pos">'+fmtBR(HOT.liquido)+'</td></tr>'
+    +'<tr><td>Sacado e recebido no banco em agosto</td><td class="ct pos">'+fmtBR(HOT.sacado)+'</td></tr>'
+    +'<tr class="sum-row"><td>Saldo de meses anteriores consumido</td><td class="ct neg">'+fmtBR(dif)+'</td></tr>'
+    +'<tr><td style="color:#888">Saque pendente de 08/09 — cai em setembro</td><td class="ct" style="color:#888">'+fmtBR(HOT.pendente)+'</td></tr>'
+    +'<tr><td style="color:#888">Custo de sacar (R$ 1,99 por operação)</td><td class="ct" style="color:#888">'+fmtBR(HOT.taxaSaque)+'</td></tr>'
+    +'</tbody></table>';
+
+  // ── Faturamento x clientes por produto (combo) ──
+  destroyChart('chart-hot-prod');
+  charts['chart-hot-prod']=new Chart(document.getElementById('chart-hot-prod').getContext('2d'),{
+    data:{labels:HOT.produtos.map(p=>p.n.length>22?p.n.slice(0,22)+'…':p.n),
+      datasets:[
+        {type:'bar',label:'Faturamento líquido',data:HOT.produtos.map(p=>p.v),backgroundColor:'#f5a623cc',borderRadius:4,yAxisID:'y'},
+        {type:'line',label:'Clientes',data:HOT.produtos.map(p=>p.q),borderColor:'#3b82f6',backgroundColor:'#3b82f6',borderWidth:2,pointRadius:4,fill:false,yAxisID:'y1'}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:'#888',font:{size:11},usePointStyle:true}},
+        tooltip:{callbacks:{label:c=>c.dataset.label==='Clientes'?' '+c.raw+' clientes':' '+fmtBR(c.raw,true)}}},
+      scales:{x:{ticks:{color:'#888',font:{size:9}},grid:{display:false}},
+        y:{position:'left',ticks:{color:'#f5a623',font:{size:10},callback:v=>fmtBig(v)},grid:{color:'#f5f5f5'}},
+        y1:{position:'right',ticks:{color:'#3b82f6',font:{size:10}},grid:{display:false}}}}
+  });
+
+  // ── Curva de retenção ──
+  destroyChart('chart-hot-ret');
+  charts['chart-hot-ret']=new Chart(document.getElementById('chart-hot-ret').getContext('2d'),{
+    type:'bar',
+    data:{labels:HOT.cobrancas.map((_,i)=>(i+1)+'ª'),datasets:[{data:HOT.cobrancas,
+      backgroundColor:HOT.cobrancas.map((_,i)=>i===0?'#f5a623cc':'#3b82f6aa'),borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>c[0].label+' cobrança',label:c=>' '+c.raw+' clientes'}}},
+      scales:{x:{ticks:{color:'#888',font:{size:9}},grid:{display:false},title:{display:true,text:'nº da cobrança na assinatura (laranja = cliente novo)',color:'#aaa',font:{size:9}}},
+        y:{ticks:{color:'#888',font:{size:10}},grid:{color:'#f5f5f5'}}}}
+  });
+
+  h='<thead><tr><th>Meio de pagamento</th><th>Clientes</th><th class="ct">Líquido</th></tr></thead><tbody>';
+  HOT.pagamento.forEach(p=>{ h+='<tr><td>'+p.n+'</td><td>'+p.q+'</td><td class="ct pos">'+fmtBR(p.v)+'</td></tr>'; });
+  document.getElementById('tbl-hot-pag').innerHTML=h+'</tbody>';
+
+  // ── Taxas da Hotmart por produto ──
+  h='<thead><tr><th>Produto</th><th>Vendas</th><th class="ct">Bruto pago</th><th>Taxa</th><th>%</th></tr></thead><tbody>';
+  HOT.taxaProd.forEach(x=>{
+    const tx=x.b-x.l, pc=x.b>0?(tx/x.b*100):0;
+    const cor=pc>=20?'#e03535':(pc>=15?'#f5a623':'#1a9e5c');
+    h+='<tr><td>'+x.n+'</td><td>'+x.q+'</td><td class="ct">'+fmtBR(x.b)+'</td>'
+      +'<td class="neg">'+fmtBR(-tx)+'</td>'
+      +'<td style="font-weight:800;color:'+cor+'">'+pc.toFixed(1)+'%</td></tr>';
+  });
+  const txT=HOT.bruto-HOT.liquido;
+  h+='<tr class="ttl"><td>Total</td><td>'+HOT.transacoes+'</td><td class="ct">'+fmtBR(HOT.bruto)+'</td>'
+    +'<td>'+fmtBR(-txT)+'</td><td>'+(txT/HOT.bruto*100).toFixed(1)+'%</td></tr></tbody>';
+  document.getElementById('tbl-hot-taxa').innerHTML=h;
+
+  // ── Taxa por meio de pagamento ──
+  const pags=HOT.taxaPag.map(x=>({...x,tx:x.b-x.l,pc:x.b>0?((x.b-x.l)/x.b*100):0}));
+  const maxPc=Math.max(...pags.map(x=>x.pc));
+  let hp='';
+  pags.forEach(x=>{
+    const cor=x.pc>=15?'#e03535':(x.pc>=10?'#f5a623':'#1a9e5c');
+    hp+='<div style="margin-bottom:10px;">'
+      +'<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">'
+      +'<span style="color:#555;font-weight:600;">'+x.n+' <span style="color:#bbb;font-weight:400">· '+x.q+' vendas</span></span>'
+      +'<span style="font-weight:800;color:'+cor+'">'+x.pc.toFixed(1)+'% &nbsp;'+fmtBR(-x.tx)+'</span></div>'
+      +'<div style="background:#f0f0f0;border-radius:99px;height:9px;overflow:hidden;">'
+      +'<div style="height:100%;width:'+(x.pc/maxPc*100).toFixed(1)+'%;background:'+cor+';border-radius:99px;"></div></div></div>';
+  });
+  const cartao=pags.find(x=>x.n.indexOf('Cart')===0), pix=pags.find(x=>x.n==='PIX Automático');
+  const economia=cartao&&pix?cartao.b*(cartao.pc-pix.pc)/100:0;
+  hp+='<div style="margin-top:6px;padding:9px 11px;background:#fff8e6;border-left:3px solid #f5a623;font-size:11px;line-height:1.55;color:#5a4a20;">'
+    +'O <strong>PIX Automático custa '+pix.pc.toFixed(1)+'%</strong> contra <strong>'+cartao.pc.toFixed(1)+'% do cartão</strong>. '
+    +'Se todo o volume de cartão de agosto tivesse entrado por PIX Automático, a economia seria de <strong>'+fmtBR(economia)+'</strong> no mês '
+    +'(' + fmtBR(economia*12) + ' ao ano). Hoje o cartão é '+(cartao.q/HOT.transacoes*100).toFixed(0)+'% das vendas.</div>';
+  hp+='<div style="margin-top:8px;font-size:10px;color:#aaa;line-height:1.5;">'
+    +'A taxa não aparece no DRE: o dashboard registra em Receitas de Vendas apenas o líquido que a Hotmart deposita. '
+    +'Mantido esse ritmo, são <strong>'+fmtBR(txT*12)+'</strong> por ano em taxas de plataforma.</div>';
+  document.getElementById('hot-taxa-pag').innerHTML=hp;
+
+  // ── Assinaturas iniciadas no mês ──
+  const A=HOT.assin;
+  h='<thead><tr><th>Plano</th><th>Assinaturas</th><th class="ct">Contratado</th><th>Mensal equiv.</th></tr></thead><tbody>';
+  A.planos.forEach(x=>{
+    h+='<tr><td>'+x.n+'</td><td>'+x.q+'</td><td class="ct '+(x.v?'pos':'zer')+'">'+(x.v?fmtBR(x.v):'—')+'</td>'
+      +'<td class="'+(x.m?'pos':'zer')+'">'+(x.m?fmtBR(x.m):'—')+'</td></tr>';
+  });
+  h+='<tr class="ttl"><td>Total</td><td>'+A.ativas+'</td><td class="ct">'+fmtBR(A.contratado)+'</td><td>'+fmtBR(A.mensal)+'</td></tr></tbody>';
+  document.getElementById('tbl-hot-assin').innerHTML=h;
+
+  // ── Retenção no primeiro mês ──
+  const perdidas=A.novasNoMes-A.ativas, tx=perdidas/A.novasNoMes*100;
+  const barra=(lbl,val,tot,cor)=>'<div style="margin-bottom:9px;">'
+    +'<div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px;">'
+    +'<span style="color:#555;font-weight:600;">'+lbl+'</span><span style="font-weight:800;color:'+cor+'">'+val+'</span></div>'
+    +'<div style="background:#f0f0f0;border-radius:99px;height:9px;overflow:hidden;">'
+    +'<div style="height:100%;width:'+(val/tot*100).toFixed(1)+'%;background:'+cor+';border-radius:99px;"></div></div></div>';
+  document.getElementById('hot-churn').innerHTML=
+     barra('Assinaturas novas em agosto',A.novasNoMes,A.novasNoMes,'#3b82f6')
+    +barra('Ainda ativas em 08/09',A.ativas,A.novasNoMes,'#1a9e5c')
+    +barra('Já perdidas',perdidas,A.novasNoMes,'#e03535')
+    +'<div style="margin-top:10px;padding:9px 11px;background:#fef2f2;border-left:3px solid #e03535;font-size:11px;line-height:1.55;color:#7a2020;">'
+    +'<strong>'+tx.toFixed(0)+'% de perda no primeiro mês.</strong> Das '+A.novasNoMes+' assinaturas iniciadas em agosto, '
+    +perdidas+' já não estavam ativas em 08/09.</div>'
+    +'<div style="margin-top:8px;font-size:10px;color:#aaa;line-height:1.5;">'
+    +'Base ativa total e cancelamentos por mês ainda não disponíveis: o relatório de assinaturas da Hotmart veio filtrado '
+    +'por status “Ativo” e por adesão em agosto.</div>';
+}
+
 // ── NAV / CONTROLS ─────────────────────────────────────
 let currentPage='fluxo';
 function goPage(id,el){
@@ -652,8 +927,10 @@ function goPage(id,el){
   document.getElementById('page-'+id).classList.add('vis');
   document.querySelectorAll('.nav').forEach(n=>n.classList.remove('on'));
   el.classList.add('on');
+  // a faixa de KPIs e o filtro de mes sao de regime de caixa: nao se aplicam a pagina de competencia
+  document.body.classList.toggle('compet', id==='hotmart');
   currentPage=id;
-  const renders={fluxo:renderFluxo,dre:renderDRE,caixa:renderCaixa,analises:renderAnalises,kpis:renderKPIsPage};
+  const renders={fluxo:renderFluxo,dre:renderDRE,caixa:renderCaixa,analises:renderAnalises,kpis:renderKPIsPage,hotmart:renderHotmart};
   if(renders[id]) renders[id]();
 }
 function setTab(t,btn){
@@ -669,7 +946,7 @@ function onSearch(){
 }
 function refreshAll(){
   renderKPIs();
-  const renders={fluxo:renderFluxo,dre:renderDRE,caixa:renderCaixa,analises:renderAnalises,kpis:renderKPIsPage};
+  const renders={fluxo:renderFluxo,dre:renderDRE,caixa:renderCaixa,analises:renderAnalises,kpis:renderKPIsPage,hotmart:renderHotmart};
   if(renders[currentPage]) renders[currentPage]();
 }
 function toggle(ri){expanded[ri]?collapse(ri):expand(ri,false);}
